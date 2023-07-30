@@ -1,0 +1,21 @@
+
+<article>
+    <a href="{% url 'set_cards' set.id %}">
+        <h3>{{ set.name }}</h3>
+    </a>
+    <small>{{ set.total_cards }} cards in total</small>
+    <p>{{ set.description }}</p>
+    <div>
+        <small>Term Language :: {{ set.term_language }}</small> <br>
+        <small>Definition Language :: {{ set.definition_language }}</small>
+    </div>
+    <a href="{% url 'update_set' set.id %}" role="button">
+        ✏️ Edit Set
+    </a> &emsp; &emsp;
+    <a href="{% url 'delete_set' set.id %}" role="button">
+        &#128465; Delete Set
+    </a>
+ </article>
+
+
+

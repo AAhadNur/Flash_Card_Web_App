@@ -1,0 +1,50 @@
+
+{% extends "cards/base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+    {% if page == "all cards" or page == "all set cards" or page == "all box cards" %}
+
+        <div>
+            {% if page == "all cards" %}
+                <h2>All Cards</h2>
+            {% elif page == "all set cards" %}
+                <h2>All Cards In Set "{{cards.0.card_set}}"</h2>
+            {% endif %}
+            <header>
+                <nav>
+                    {% for item in listi %}
+                        <a href="{% url 'box_cards' pk=cards.0.card_set.id box_num=item %}">
+                            &#128199; {{item | ordinal}} Box
+                        </a>
+                    {% endfor %}
+                </nav>
+            </header> <br>
+            <a href="{% url 'add_card' %}" role="button">
+                ✨ Create New Card
+            </a>
+            {% for card in cards %}
+                {% ifchanged %}
+                <h3>🗃 {{ card.box | ordinal }} Box</h3>
+                {% endifchanged %}
+                {% include "cards/card.html" %}
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <div>
+            <h1>
+                All Sets
+            </h1>
+            <a href="{% url 'create_set' %}" role="button">
+                ✨ Create New Set
+            </a>
+            {% for set in card_sets %}
+                {% include "cards/sets.html" %}
+            {% endfor %}
+        </div>
+
+    {% endif %}
+{% endblock %}

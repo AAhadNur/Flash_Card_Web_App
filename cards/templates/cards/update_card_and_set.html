@@ -1,0 +1,41 @@
+
+{% extends "cards/base.html" %}
+
+
+{% block content %}
+    {% if page == "edit card" %}
+
+        <div>
+            <div>
+                <h2>✏️ Edit Card</h2>
+            </div>
+                
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Save Card">
+            </form>
+            <a href="{% url 'all_cards' %}">
+                Cancel
+            </a>
+        </div>
+
+    {% else %}
+
+        <div>
+            <div>
+                <h2>✏️ Update Set</h2>
+            </div>
+                
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Save Set">
+            </form>
+            <a href="{% url 'home' %}">
+                Cancel
+            </a>
+        </div>
+
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+
+{% extends 'cards/base.html' %}
+
+{% block content %}
+    {% if page == "set" %}
+        <form class="form" method="POST" action="">
+            {% csrf_token %}
+            <div>
+                <p>Are you sure you want to delete "{{obj}}" set?</p>
+            </div>
+
+            <div>
+                <input type="submit" value="Confirm" /> &emsp; &emsp;
+                <a href="{% url 'home' %}">Go Back</a>
+            </div>
+        </form>
+    {% else %}
+        <form class="form" method="POST" action="">
+            {% csrf_token %}
+            <div>
+                <p>Are you sure you want to delete "{{obj}}" card?</p>
+            </div>
+
+            <div>
+                <input type="submit" value="Confirm" /> &emsp; &emsp;
+                <a href="{{request.META.HTTP_REFERER}}">Go back</a>
+            </div>
+        </form>
+    {% endif %}
+{% endblock content %}
+
+
