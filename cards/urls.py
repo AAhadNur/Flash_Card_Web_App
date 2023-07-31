@@ -16,6 +16,8 @@ urlpatterns = [
     path('update-card/<int:pk>/', views.edit_card, name="edit_card"),
     path('delete-card/<int:pk>/', views.delete_card, name="delete_card"),
 
-    path('box-cards/<int:pk>/<int:box_num>/',
+    path('box-cards/<str:pk>/<int:box_num>/',
          views.box_view, name="box_cards"),
+    path('all-box-cards/<int:box_num>/',
+         views.all_box_view, name="all_box_cards"),
 ]

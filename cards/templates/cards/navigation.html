@@ -1,5 +1,12 @@
 
 <nav>
+    {% if request.user.is_authenticated %}
+        <small>Welcome {{request.user.username}}</small>
+        <a href="{% url 'logout' %}">Log Out</a>
+    {% else %}
+        <a href="{% url 'signup' %}">Sign Up</a>
+        <a href="{% url 'login' %}">Log In</a>
+    {% endif %} <br> <br>
     <a href="{% url 'all_cards' %}">&#128451; All Cards</a>
     <a href="{% url 'home' %}">&#127915; All Sets</a>
 </nav>

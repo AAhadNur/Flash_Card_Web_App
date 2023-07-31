@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from cards.models import Card, Set
 from cards.forms import AddCardForm, CreateSetForm
@@ -36,12 +38,19 @@ def individual_set(request, pk):
     return render(request, 'cards/all_cards_and_sets.html', context)
 
 
+@login_required
 def create_set(request):
     if request.method == "POST":
         form = CreateSetForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            Set.objects.create(
+                name=request.POST.get('name'),
+                description=request.POST.get('description'),
+                term_language=request.POST.get('term_language'),
+                definition_language=request.POST.get('definition_language'),
+                owner=request.user,
+            )
 
             return redirect('home')
 
@@ -55,6 +64,7 @@ def create_set(request):
     return render(request, 'cards/add_cards_and_sets.html', context)
 
 
+@login_required
 def update_set(request, pk):
     card_set = Set.objects.get(id=pk)
 
@@ -76,6 +86,7 @@ def update_set(request, pk):
     return render(request, 'cards/update_card_and_set.html', context)
 
 
+@login_required
 def delete_set(request, pk):
     page = 'set'
     card_set = Set.objects.get(id=pk)
@@ -95,23 +106,45 @@ def all_cards(request):
     page = 'all cards'
     cards = Card.objects.all()
 
+    li = []
+    size = len(cards)
+
+    for card in cards:
+        if card.box not in li:
+            li.append(card.box)
+
     context = {
         'cards': cards,
         'page': page,
+        'listi': li,
+        'total_cards': size,
     }
 
-    return render(request, 'cards/all_cards_and_sets.html', context)
+    return render(request, 'cards/all_cards.html', context)
 
 
+@login_required
 def add_cards(request):
     page = 'add card'
     if request.method == "POST":
         form = AddCardForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            card_set_id = request.POST.get('card_set')
+            card_set = Set.objects.get(id=card_set_id)
 
-            return redirect('add_card')
+            if card_set is not None:
+                Card.objects.create(
+                    question=request.POST.get('question'),
+                    answer=request.POST.get('answer'),
+                    card_set=card_set,
+                    owner=request.user,
+                )
+
+                return redirect('add_card')
+
+            else:
+                messages.error(request, 'Your entered Set is wrong!!!')
 
     else:
         form = AddCardForm()
@@ -121,6 +154,7 @@ def add_cards(request):
     return render(request, 'cards/add_cards_and_sets.html', context)
 
 
+@login_required
 def edit_card(request, pk):
     page = 'edit card'
     card = Card.objects.get(id=pk)
@@ -141,6 +175,7 @@ def edit_card(request, pk):
     return render(request, 'cards/update_card_and_set.html', context)
 
 
+@login_required
 def delete_card(request, pk):
     card = Card.objects.get(id=pk)
 
@@ -161,6 +196,7 @@ def delete_card(request, pk):
 
 def box_view(request, pk, box_num):
     page = 'all box cards'
+
     card_set = Set.objects.get(id=pk)
     all_cards = card_set.card_set.all()
     cards = card_set.card_set.filter(box=box_num)
@@ -178,3 +214,24 @@ def box_view(request, pk, box_num):
     }
 
     return render(request, 'cards/all_cards_and_sets.html', context)
+
+
+def all_box_view(request, box_num):
+    page = 'all box cards'
+
+    all_cards = Card.objects.all()
+    cards = Card.objects.filter(box=box_num)
+
+    li = []
+
+    for card in all_cards:
+        if card.box not in li:
+            li.append(card.box)
+
+    context = {
+        'page': page,
+        'cards': cards,
+        'listi': li,
+    }
+
+    return render(request, 'cards/all_box_cards.html', context)

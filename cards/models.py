@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Set(models.Model):
@@ -9,6 +10,11 @@ class Set(models.Model):
     definition_language = models.CharField(
         max_length=100, null=True, blank=True, default='English')
     created_at = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(
+        User, related_name='sets', on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return str(self.name)
@@ -33,6 +39,11 @@ class Card(models.Model):
         default=BOXES[0]
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(
+        User, related_name='cards', on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return str(self.question)

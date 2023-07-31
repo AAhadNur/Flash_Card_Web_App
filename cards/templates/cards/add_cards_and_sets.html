@@ -4,7 +4,9 @@
 {% block content %}
     {% if page == "add card" %}
         <div>
-            <h2>✨ Create New Card</h2>
+            {% if request.user.is_authenticated %}
+                <h2>✨ Create New Card</h2>
+            {% endif %}
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

@@ -9,12 +9,14 @@
         <small>Term Language :: {{ set.term_language }}</small> <br>
         <small>Definition Language :: {{ set.definition_language }}</small>
     </div>
-    <a href="{% url 'update_set' set.id %}" role="button">
-        ✏️ Edit Set
-    </a> &emsp; &emsp;
-    <a href="{% url 'delete_set' set.id %}" role="button">
-        &#128465; Delete Set
-    </a>
+    {% if request.user.is_authenticated and request.user == set.owner %}
+        <a href="{% url 'update_set' set.id %}" role="button">
+            ✏️ Edit Set
+        </a> &emsp; &emsp;
+        <a href="{% url 'delete_set' set.id %}" role="button">
+            &#128465; Delete Set
+        </a>
+    {% endif %}
  </article>
 
 

@@ -1,13 +1,27 @@
+{% load humanize %}
 
 <article>
     <h4>{{ card.question }}</h4>
     <p>{{ card.answer }}</p>
-    <a href="{% url 'edit_card' card.id %}" role="button">
-        ✏️ Edit Card
-    </a> &emsp; &emsp;
-    <a href="{% url 'delete_card' card.id %}" role="button">
-        &#128465; Delete Card
-    </a>
+
+    {% if page == 'all cards' %}
+        <p>
+            Set :: <a href="{% url 'set_cards' card.card_set.id %}">{{card.card_set}}</a>
+            &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+            &emsp; &emsp; &emsp; &emsp; &emsp; Box :: 
+            <a href="{% url 'all_box_cards' box_num=card.box %}">{{card.box | ordinal}}</a>
+        </p>
+    {% endif %}
+
+    {% if request.user.is_authenticated and request.user == card.owner %}
+        <a href="{% url 'edit_card' card.id %}" role="button">
+            ✏️ Edit Card
+        </a> &emsp; &emsp;
+        <a href="{% url 'delete_card' card.id %}" role="button">
+            &#128465; Delete Card
+        </a>
+    {% endif %}
+    
  </article>
 
 

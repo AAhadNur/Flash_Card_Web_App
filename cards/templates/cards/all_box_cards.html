@@ -1,0 +1,27 @@
+
+{% extends "cards/base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+    <div>
+        <header>
+            <nav>
+                {% for item in listi %}
+                    <a href="{% url 'all_box_cards' box_num=item %}">
+                        &#128199; {{item | ordinal}} Box
+                    </a>
+                {% endfor %}
+            </nav>
+        </header> <br>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'add_card' %}" role="button">
+                ✨ Create New Card
+            </a>
+        {% endif %}
+        <h3>🗃 {{ cards.0.box | ordinal }} Box</h3>
+        {% for card in cards %}
+            {% include "cards/card.html" %}
+        {% endfor %}
+    </div>
+{% endblock %}
